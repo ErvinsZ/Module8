@@ -12,8 +12,8 @@ const basicAuthMiddleware = async (req, res, next) => {
     ).split(":")
     const user = await UserModel.findByCredentials(username, password)
     if (!user) {
-      const error = new Error("Unable to login")
-      error.httpStatusCode = 400
+      const error = new Error("You shall not pass")
+      error.httpStatusCode = 401
       next(error)
     } else {
       req.user = user
