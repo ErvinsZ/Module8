@@ -1,12 +1,12 @@
 const express = require("express")
 const q2m = require("query-to-mongo")
-const { basic } = require("./auth")
+const { basic, adminOnly } = require("./auth")
 
 const UserSchema = require("./schema")
 
 const usersRouter = express.Router()
 
-usersRouter.get("/", basic, async (req, res, next) => {
+usersRouter.get("/", basic, adminOnly, async (req, res, next) => {
   try {
     const query = q2m(req.query)
 
