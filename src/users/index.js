@@ -68,8 +68,8 @@ usersRouter.delete("/me", authorize, async (req, res, next) => {
 
 usersRouter.post("/login", async (req, res, next) => {
   try {
-    const { email, password } = req.body
-    const user = await UserModel.findByCredentials(email, password)
+    const { username, password } = req.body
+    const user = await UserModel.findByCredentials(username, password)
     const tokens = await authenticate(user)
     res.send(tokens)
   } catch (error) {
