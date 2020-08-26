@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken")
 const UserModel = require("./schema")
 const { verifyJWT } = require("./authTools")
 
