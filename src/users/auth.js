@@ -1,25 +1,26 @@
+const jwt = require("jsonwebtoken")
 const UserModel = require("./schema")
-const atob = require("atob")
+const { verifyJWT } = require("./authTools")
 
-const basicAuthMiddleware = async (req, res, next) => {
-  if (!req.headers.authorization) {
-    const error = new Error("Please provide a basic authentication")
-    error.httpStatusCode = 401
-    next(error)
-  } else {
-    const [username, password] = atob(
-      req.headers.authorization.split(" ")[1]
-    ).split(":")
-    const user = await UserModel.findByCredentials(username, password)
+const authorize = async (req, res, next) => {
+  try {
+    const token = req.header("Authorization").replace("Bearer ", "")
+    const decoded = await verifyJWT(token)
+    const user = await UserModel.findOne({
+      _id: decoded._id,
+    })
+
     if (!user) {
-      const error = new Error("You shall not pass")
-      error.httpStatusCode = 401
-      next(error)
-    } else {
-      req.user = user
-
-      next()
+      throw new Error()
     }
+
+    req.token = token
+    req.user = user
+    next()
+  } catch (e) {
+    const err = new Error("Please authenticate")
+    err.httpStatusCode = 401
+    next(err)
   }
 }
 
@@ -32,7 +33,4 @@ const adminOnlyMiddleware = async (req, res, next) => {
   }
 }
 
-module.exports = {
-  basic: basicAuthMiddleware,
-  adminOnly: adminOnlyMiddleware,
-}
+module.exports = { authorize, adminOnlyMiddleware }
