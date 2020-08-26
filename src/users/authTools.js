@@ -6,7 +6,7 @@ const authenticate = async (user) => {
     
     const newAccessToken = await generateJWT({ _id: user._id })
     const newRefreshToken = await generateRefreshJWT({ _id: user._id })
-
+    console.log(user)
     user.refreshTokens = user.refreshTokens.concat({ token: newRefreshToken })
     await user.save()
 

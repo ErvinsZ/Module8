@@ -28,6 +28,11 @@ const UserSchema = new Schema(
       required: true,
     },
     professions: Array,
+    refreshTokens: [{
+      token: {
+        type: String
+      }
+    }]
   },
   { timestamps: true }
 )
