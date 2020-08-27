@@ -8,7 +8,7 @@ passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_TOKEN,
+      clientSecret: process.env.GOOGLE_SECRET,
       callbackURL: "http://localhost:3003/users/googleRedirect",
     },
     async (accessToken, refreshToken, profile, done) => {
