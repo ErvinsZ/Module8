@@ -14,10 +14,12 @@ passport.use(
     async (accessToken, refreshToken, profile, done) => {
       const newUser = {
         googleId: profile.id,
-        name: profile.name.givenName,
-        surname: profile.name.familyName,
+        firstname: profile.name.givenName,
+        lastname: profile.name.familyName,
         email: profile.emails[0].value,
         role: "user",
+        username:false,
+        password:false,
         refreshTokens: [],
       }
 
