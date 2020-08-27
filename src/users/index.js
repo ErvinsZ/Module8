@@ -2,6 +2,7 @@ const express = require("express")
 const q2m = require("query-to-mongo")
 const { authenticate, refreshToken } = require("./authTools")
 const { authorize } = require("./auth")
+const passport = require("passport")
 
 const UserModel = require("./schema")
 
@@ -117,5 +118,33 @@ usersRouter.post("/refreshToken", async (req, res, next) => {
     }
   }
 })
+
+usersRouter.get(
+  "/googleLogin",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+)
+
+usersRouter.get(
+  "/googleRedirect",
+  passport.authenticate("google"),
+  async (req, res, next) => {
+    try {
+      console.log(req.user)
+      const { token, refreshToken } = req.user.tokens
+      res.cookie("accessToken", token, {
+        httpOnly: true,
+      })
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        path: "/users/refreshToken",
+      })
+      res.status(200).redirect("http://localhost:3000/")
+    } catch (error) {
+      console.log(error)
+      next(error)
+    }
+  }
+)
+
 
 module.exports = usersRouter

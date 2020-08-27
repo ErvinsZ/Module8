@@ -3,6 +3,10 @@ const { join } = require("path")
 const listEndpoints = require("express-list-endpoints")
 const mongoose = require("mongoose")
 const usersRouter = require("./users")
+const passport = require("passport")
+const morgan = require("morgan")
+const cookieParser = require("cookie-parser")
+const authRouter = require("./users/oauth")
 
 const {
   notFoundHandler,
@@ -19,6 +23,10 @@ const port = process.env.PORT || 3003
 const staticFolderPath = join(__dirname, "../public")
 server.use(express.static(staticFolderPath))
 server.use(express.json())
+server.use(morgan())
+
+server.use(passport.initialize())
+server.use(cookieParser())
 server.use("/users", usersRouter)
 
 server.use(badRequestHandler)
